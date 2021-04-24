@@ -12,7 +12,12 @@ static Display *dpy;
 static i32 screen;
 static Window root;
 
-Block::Block(const char*, u32, i32) { };
+Block::Block(const char* command, u32 interval, i32 signal)
+{
+    m_command = command;
+    m_interval = interval;
+    m_signal = signal;
+};
 
 const char* Block::get_cmd() { return Block::m_command; };
 
