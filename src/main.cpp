@@ -8,8 +8,10 @@ int main()
     for (u32 i = 0; i < LENGTH(blocks); i++)
     {
         Block block = blocks[i];
-        printf("block %i: command => '%s' interval => '%i' signal => '%u'\n", i, block.get_cmd(), block.get_interval(), block.get_sig());
+        char* cmd_output = block.cmd_output();
+        printf("block %i: command => '%s' interval => '%i' signal => '%u' output => '%s'\n", i, block.cmd(), block.interval(), block.sig(), cmd_output);
+        free(cmd_output);
     }
-
     return 0;
 };
+

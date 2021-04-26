@@ -22,12 +22,15 @@ using i32 = int;
 #define CMDLENGTH 50
 #define STATUSLENGTH (LENGTH(blocks) * CMDLENGTH + 1)
 
+void setroot();
+
 class Block {
 public:
-    const char* get_cmd();
-    u32 get_sig();
-    i32 get_interval();
-    void setroot();
+    const char* cmd();
+    i32 interval();
+    u32 sig();
+
+    char* cmd_output();
 
     Block(const char*, u32, i32);
 private:
