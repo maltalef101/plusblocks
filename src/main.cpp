@@ -14,8 +14,8 @@ void termhandler(i32)
     status_continue = 0;
 }
 
-static void event_loop();
-static void event_loop()
+static void status_loop();
+static void status_loop()
 {
     while (status_continue) {
         char* root_str = static_cast<char*>(calloc(1024, 1));
@@ -44,7 +44,7 @@ int main()
         printf("block %i: command => '%s' interval => '%i' signal => '%u' output => '%s'\n", i, block.cmd(), block.interval(), block.signal(), cmd_output);
         free(cmd_output);
     } */
-    event_loop();
+    status_loop();
     signal(SIGINT, termhandler);
     return 0;
 };
