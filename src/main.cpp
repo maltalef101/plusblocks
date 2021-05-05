@@ -1,30 +1,35 @@
 #include <LibBlock.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
 #include <string.h>
 
 #include "config.h"
+
+static constexpr size_t SIZE_LIMIT = 50;
 
 static bool status_continue = true;
 
 void termhandler(i32);
 void termhandler(i32)
 {
-    status_continue = 0;
+    status_continue = false;
 }
 
 static void status_loop();
 static void status_loop()
 {
     while (status_continue) {
-        char* root_str = static_cast<char*>(calloc(1024, 1));
+        char* root_str = static_cast<char*>(calloc(sizeof(char), 1024));
         for (u32 i = 0; i < LENGTH(blocks); i++) {
             Block block = blocks[i];
-            char* cmd_output = block.cmd_output();
+            char* cmd_output = block.last_output();
+            if (strlen(cmd_output) >= 50)
+                cmd_output[47] = '\0';
             if (i == 0) {
                 strcpy(root_str, cmd_output);
             } else {
+                strcat(root_str, delim);
                 strcat(root_str, cmd_output);
             }
             free(cmd_output);
@@ -48,4 +53,3 @@ int main()
     signal(SIGINT, termhandler);
     return 0;
 };
-

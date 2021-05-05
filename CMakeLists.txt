@@ -22,8 +22,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." TRUE)
 
+# clang-format target.
+# file(GLOB_RECURSE ALL_SOURCE_FILES ${PROJECT_SOURCE_DIR}/*.cpp ${PROJECT_SOURCE_DIR}/*.h)
+# foreach(SOURCE_FILE ${ALL_SOURCE_FILES})
+
+add_custom_target(
+    fmt
+    COMMAND clang-format
+    -i
+    ${ALL_CXX_SOURCE_FILES}
+)
+
+
 add_custom_target(run
-	COMMAND ${CMAKE_SOURCE_DIR}/build/plusblocks
+    COMMAND ${CMAKE_SOURCE_DIR}/build/plusblocks
 	USES_TERMINAL
 )
 
@@ -33,6 +45,7 @@ if (${FORCE_COLORED_OUTPUT})
     endif ()
 endif ()
 
+add_compile_options(-O2)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Werror=missing-declarations)
