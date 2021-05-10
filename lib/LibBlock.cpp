@@ -63,12 +63,14 @@ char* Block::cmd_output() const
 char* Block::update_output()
 {
     if (this->last_output() == NULL) {
-        this->set_last_output(this->cmd_output());
+        char* this_last_output = this->cmd_output();
+        this->set_last_output(this_last_output);
     }
     if (this->time_since_last_updated_in_sec() >= this->interval()) {
         this->set_time_since_last_updated_in_sec(0);
 
-        this->set_last_output(this->cmd_output());
+        char* this_last_output = this->cmd_output();
+        this->set_last_output(this_last_output);
 
         return this->last_output();
     } else {

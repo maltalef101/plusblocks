@@ -3,10 +3,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "config.h"
 
-static constexpr size_t SIZE_LIMIT = 50;
+
+static constexpr size_t SIZE_LIMIT = 47;
 
 static bool status_continue = true;
 
@@ -23,9 +25,9 @@ static void status_loop()
         char* root_str = static_cast<char*>(calloc(sizeof(char), 1024));
         for (u32 i = 0; i < LENGTH(blocks); i++) {
             Block block = blocks[i];
-            char* cmd_output = block.last_output();
-            if (strlen(cmd_output) >= 50)
-                cmd_output[47] = '\0';
+            char* cmd_output = block.update_output();
+            if (strlen(cmd_output) >= SIZE_LIMIT)
+                cmd_output[SIZE_LIMIT] = '\0';
             if (i == 0) {
                 strcpy(root_str, cmd_output);
             } else {
@@ -37,6 +39,7 @@ static void status_loop()
         sleep(1);
         // set_x_root(root_str);
         printf("%s\n", root_str);
+        printf("%ld\n", time(0));
         free(root_str);
     }
 }
