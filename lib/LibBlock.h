@@ -1,25 +1,12 @@
 #pragma once
 
-using u32 = unsigned int;
-using i32 = int;
-
-#include <X11/Xlib.h>
-#include <iostream>
-#include <signal.h>
 #include <stdlib.h>
-#include <unistd.h>
 
-#ifdef __OpenBSD__
-#    define SIGPLUS SIGUSR1 + 1
-#    define SIGMINUS SIGUSR1 - 1
-#else
-#    define SIGPLUS SIGRTMIN
-#    define SIGMINUS SIGRTMIN
-#endif
+using u32 = __UINT32_TYPE__;
+using i32 = __INT32_TYPE__;
 
 #define LENGTH(X) (sizeof(X) / sizeof(X[0]))
-#define MIN(a, b) ((a < b) ? a : b)
-#define CMDLENGTH 50
+static constexpr u32 CMDLENGTH = 47;
 #define STATUSLENGTH (LENGTH(blocks) * CMDLENGTH + 1)
 
 void set_x_root(const char*);
@@ -30,7 +17,7 @@ public:
 
     const char* cmd() const;
     u32 interval() const;
-    u32 signal() const;
+    i32 signal() const;
 
     u32 time_since_last_updated_in_sec() const;
     void set_time_since_last_updated_in_sec(u32);
@@ -45,5 +32,5 @@ private:
     u32 m_interval;
     i32 m_signal;
     u32 m_time_since_last_updated_in_sec = 0;
-    char* m_last_output;
+    char* m_last_output = NULL;
 };

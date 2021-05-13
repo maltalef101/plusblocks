@@ -22,6 +22,7 @@ Block::Block(const char* command, u32 interval, i32 signal)
     m_command = command;
     m_interval = interval;
     m_signal = signal;
+    m_last_output = NULL;
     m_time_since_last_updated_in_sec = 0;
 }
 
@@ -29,7 +30,7 @@ const char* Block::cmd() const { return Block::m_command; }
 
 u32 Block::interval() const { return Block::m_interval; }
 
-u32 Block::signal() const { return Block::m_signal; }
+i32 Block::signal() const { return Block::m_signal; }
 
 u32 Block::time_since_last_updated_in_sec() const { return Block::m_time_since_last_updated_in_sec; }
 
@@ -62,20 +63,25 @@ char* Block::cmd_output() const
 
 char* Block::update_output()
 {
+
     if (this->last_output() == NULL) {
         char* this_last_output = this->cmd_output();
         this->set_last_output(this_last_output);
     }
-    if (this->time_since_last_updated_in_sec() >= this->interval()) {
-        this->set_time_since_last_updated_in_sec(0);
 
-        char* this_last_output = this->cmd_output();
-        this->set_last_output(this_last_output);
-
+    if (this->interval() == 0) {
         return this->last_output();
     } else {
-        this->set_time_since_last_updated_in_sec(this->time_since_last_updated_in_sec() + 1);
-        return this->last_output();
-    }
+        if (this->time_since_last_updated_in_sec() >= this->interval()) {
+            this->set_time_since_last_updated_in_sec(0);
 
+            char* this_last_output = this->cmd_output();
+            this->set_last_output(this_last_output);
+
+            return this->last_output();
+        } else {
+            this->set_time_since_last_updated_in_sec(this->time_since_last_updated_in_sec() + 1);
+            return this->last_output();
+        }
+    }
 }

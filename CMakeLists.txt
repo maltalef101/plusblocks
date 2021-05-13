@@ -45,7 +45,6 @@ if (${FORCE_COLORED_OUTPUT})
     endif ()
 endif ()
 
-add_compile_options(-O2)
 add_compile_options(-Wall)
 add_compile_options(-Wextra)
 add_compile_options(-Werror=missing-declarations)

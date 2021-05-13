@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <time.h>
 
 #include "config.h"
@@ -12,10 +13,24 @@ static constexpr size_t SIZE_LIMIT = 47;
 
 static bool status_continue = true;
 
-void termhandler(i32);
-void termhandler(i32)
+static void termhandler(i32);
+static void termhandler(i32)
 {
     status_continue = false;
+}
+
+static void sighandler(i32 sig_num);
+static void sighandler(i32 sig_num)
+{
+    for (u32 i = 0; i < LENGTH(blocks); i++) {
+        Block block = blocks[i];
+        if (block.signal() == sig_num) {
+            char* cmd_output = block.cmd_output();
+            block.set_last_output(cmd_output);
+            block.set_time_since_last_updated_in_sec(0);
+            free(cmd_output);
+        }
+    }
 }
 
 static void status_loop();
@@ -54,5 +69,8 @@ int main()
     } */
     status_loop();
     signal(SIGINT, termhandler);
+    for (u32 i = 0; i < LENGTH(blocks); i++) {
+        signal(SIGRTMIN+blocks[i].signal(), sighandler);
+    }
     return 0;
 };
